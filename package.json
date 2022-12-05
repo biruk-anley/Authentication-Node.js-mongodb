@@ -1,0 +1,11 @@
+{
+  "name": "kuraz",
+  "version": "1.0.0",
+  "description": "Kuraz nod.js-basics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
