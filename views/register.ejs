@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="screen">
+            <div class="screen__content">
+                <form class="login" action="/signup" method="post">
+                    <div class="login__field">
+                        <i class="login__icon fas fa-user"></i>
+                        <input type="text" name="email" class="login__input" placeholder="Email" required>
+                    </div>
+                    <!--email error checker-->
+                    <div class="emailerror">
+                    
+                    </div>
+                    <div class="login__field">
+                        <i class="login__icon fas fa-lock"></i>
+                        <input type="password" name="password" class="login__input" placeholder="Password" required>
+                    </div>
+
+                    <div class="login__field">
+                        <i class="login__icon fas fa-lock"></i>
+                        <input type="password" name="confirmPassword" class="login__input" placeholder="confirm Password">
+                    </div>
+                    <div class="passworderror">
+
+                    </div>
+                    <button class="button login__submit" type="submit">
+                        <span class="button__text">Sign up</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
+                </form>
+
+
+            </div>
+            <div class="screen__background">
+                <span class="screen__background__shape screen__background__shape4"></span>
+                <span class="screen__background__shape screen__background__shape3"></span>
+                <span class="screen__background__shape screen__background__shape2"></span>
+                <span class="screen__background__shape screen__background__shape1"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- here is the script to handle form-->
+    <script>
+        const form = document.querySelector('form')
+        const emailerror = document.querySelector('.email.error')
+        const passworderror = document.querySelector('.password.error')
+
+        form.addEventListener('submit',async(e)=>{
+            // prevent the page from refreshing
+            e.preventDefault()
+            const email = form.email.value;
+            
+            const password = form.password.value;
+            const confirmPassword = form.confirmPassword.value;
+            console.log(password)
+
+            // check confirmation password
+            if (password!=confirmPassword){
+                alert('password is does not match')
+            }
+            else{
+                 // to fetch the submitted data
+
+                const res = await fetch('/signup', {
+                    body: JSON.stringify({ email, password, confirmPassword }),
+                    headers: { 'content-type': 'application/json' },
+                    method: 'Post'
+                });
+                
+                const data = await res.json();
+                console.log('--error--',data);
+                if(data.User){
+                   
+                    location.assign('/register')
+                }
+                else{
+
+                    console.log('whyyyyyyyy',data.err)
+                    // emailerror.textContent = data.err.email;
+                    // passworderror.textContent = data.err.passwrd;
+                }
+               
+                
+            }
+
+           
+        })
+    </script>
+</body>
+
+</html>
