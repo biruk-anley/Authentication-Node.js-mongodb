@@ -177,3 +177,14 @@ body {
 .social-login__icon:hover {
     transform: scale(1.5);
 }
+
+.passworderror{
+color: rgb(215, 50, 218);
+font-weight: bold;
+font-size: 1.2rem;
+}
+.emailerror{
+color: rgb(215, 50, 218);
+font-size: 1.2rem;
+font-weight: bold;
+}
