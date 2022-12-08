@@ -5,36 +5,88 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
    <div class="container">
-    <div class="screen">
-        <div class="screen__content">
-            <form class="login">
-                <div class="login__field">
-                    <i class="login__icon fas fa-user"></i>
-                    <input type="text" class="login__input" placeholder="Email">
-                </div>
-                <div class="login__field">
-                    <i class="login__icon fas fa-lock"></i>
-                    <input type="password" class="login__input" placeholder="Password">
-                </div>
-                <button class="button login__submit">
-                    <span class="button__text">Log In Now</span>
-                    <i class="button__icon fas fa-chevron-right"></i>
-                </button>
-            </form>
+        <div class="screen">
+            <div class="screen__content">
+                <form class="login" action="/login_post" method="post">
+                    <div class="login__field">
+                        <i class="login__icon fas fa-user"></i>
+                        <input type="text" class="login__input" placeholder="Email" name="email">
+                    </div>
+
+                    <div class="emailerror">
+                    
+                    </div>
+
+
+                    <div class="login__field">
+                        <i class="login__icon fas fa-lock"></i>
+                        <input type="password" class="login__input" placeholder="Password" name="password">
+                    </div>
+
+                    <div class="passworderror">
+                    
+                    </div>
+                    <button class="button login__submit">
+                        <span class="button__text">Log In Now</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
+                </form>
+            
+            </div>
+            <div class="screen__background">
+                <span class="screen__background__shape screen__background__shape4"></span>
+                <span class="screen__background__shape screen__background__shape3"></span>
+                <span class="screen__background__shape screen__background__shape2"></span>
+                <span class="screen__background__shape screen__background__shape1"></span>
+            </div>
+        </div>
+    </div> 
+    <script>
+        const form = document.querySelector('form')
+        const emailerror = document.querySelector('.emailerror')
+        const passworderror = document.querySelector('.passworderror')
+
+        form.addEventListener('submit', async (e) => {
+            // prevent the page from refreshing
+            e.preventDefault()
+            const email = form.email.value;
+
+            const password = form.password.value;
+            console.log(password)
+
+
            
-        </div>
-        <div class="screen__background">
-            <span class="screen__background__shape screen__background__shape4"></span>
-            <span class="screen__background__shape screen__background__shape3"></span>
-            <span class="screen__background__shape screen__background__shape2"></span>
-            <span class="screen__background__shape screen__background__shape1"></span>
-        </div>
-    </div>
-</div> 
+                // to fetch the submitted data
+
+                const res = await fetch('/login', {
+                    body: JSON.stringify({ email, password }),
+                    headers: { 'content-type': 'application/json' },
+                    method: 'Post'
+                });
+
+                const data = await res.json();
+                console.log('--error--', data);
+                if (data.user) {
+
+                    location.assign('/register')
+                }
+                else {
+
+                    console.log(data.err)
+                     emailerror.textContent = data.err.email;
+                    passworderror.textContent = data.err.password;
+                }
+
+
+            
+
+
+        })
+    </script>
 </body>
 </html>
