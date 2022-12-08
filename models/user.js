@@ -19,6 +19,21 @@ const userSchema = new Schema({
 
 });
 
+// checking login status
+userSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password)
+        if (auth) {
+            return user;
+        }
+       throw Error('Invalid password')
+     }
+    else {
+        throw Error('Invalid email')
+    }
+}
+
 // hashing a password using hook
 userSchema.pre('save', async function (next){
     const salt = await bcrypt.genSalt();
