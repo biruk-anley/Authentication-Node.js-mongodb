@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    console.log('/ is register')
+    console.log('/ is registeer')
 
     res.render('index')
 });
