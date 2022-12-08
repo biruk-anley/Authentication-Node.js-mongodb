@@ -4,7 +4,8 @@ const express = require('express')
 const app = express();
 
 // importing monogoose
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const user = require('./models/user.js');
 
 // here we need to tell that we use ejs to render express
 app.set('view engine', 'ejs');
@@ -15,14 +16,16 @@ app.use(express.static(__dirname + '/public'))
 
 
 // lets connect a model
-const user = require('./models/user.js')
+const User = require('./models/user.js')
 mongoose.connect('mongodb://127.0.0.1:27017/mylib',
     {
         useNewUrlParser: true,
         useUnifiedTopology:true
     }).then((result)=>{console.log('i am connected')}).catch((err)=>{console.error(err)})
 
-
+app.get('/login', (req, res) => { 
+    res.render('login')
+});
 app.get('/', (req, res) => {
     console.log('/ is running')
 
@@ -63,6 +66,25 @@ app.post('/signup', async (req, res) => {
 // app.post('/signup', (req, res) => {
 //     console.log(req.body)
 // });
+
+
+//////login//////
+
+
+
+app.post('/login_post', async (req,res)=>
+{
+    const { email, password } = req.body;
+    
+    try {
+        const User = await user.login(email, password);
+        res.status(200).json(send({User}))
+    }
+    catch (err) {
+        console.log(err.message);
+        res.status(403).json(send({err:err.message}))
+    }
+})
 
 
 
