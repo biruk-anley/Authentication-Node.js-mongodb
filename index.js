@@ -3,9 +3,13 @@ const express = require('express')
 // instantiate app
 const app = express();
 
+
 // importing monogoose
 const mongoose = require('mongoose');
 const user = require('./models/user.js');
+const bodyparser = require('body-parser');
+const encoding = bodyparser.urlencoded({extended:false})
+
 
 // here we need to tell that we use ejs to render express
 app.set('view engine', 'ejs');
@@ -16,7 +20,10 @@ app.use(express.static(__dirname + '/public'))
 
 
 // lets connect a model
-const User = require('./models/user.js')
+const User = require('./models/user.js');
+const Profile = require('./models/profile');
+const Education = require('./models/education');
+const Experience = require('./models/experince')
 mongoose.connect('mongodb://127.0.0.1:27017/mylib',
     {
         useNewUrlParser: true,
@@ -32,11 +39,22 @@ app.get('/', (req, res) => {
     res.render('register')
 });
 
-app.get('/register', (req, res) => {
-    console.log('/ is registeer')
+app.get('/add/education', (req, res) => {
+    console.log('/ education is working')
 
-    res.render('index')
+    res.render('addeducation')
 });
+
+app.get('/register', async (req, res) => {
+    console.log('/ is registeer')
+    let profile = await Profile.find();
+    profile=profile[0]
+    console.log('meeeeeee', profile)
+
+
+    res.render('index', { profile })
+});
+
 
 // posting a data to mongodb we make async since it takes a time
 app.post('/signup', async (req, res) => {
@@ -75,15 +93,71 @@ app.post('/signup', async (req, res) => {
 app.post('/login_post', async (req,res)=>
 {
     const { email, password } = req.body;
-    
     try {
+        console.log('password', password)
         const User = await user.login(email, password);
-        res.status(200).json(send({User}))
+        console.log('login user', User)
+        res.status(200).send({User})
     }
     catch (err) {
         console.log(err.message);
-        res.status(403).json(send({err:err.message}))
+        res.status(403).json(send({ err:err.message }));
     }
+})
+
+//crud operation
+app.post('/store/education',encoding, async(req, res) => {
+    const { schoolName, department, dateFrom, dateTo } = req.body;
+    try { 
+        const educations = await Education.create({
+            schoolName: schoolName,
+            department: department,
+            dateFrom: dateFrom,
+            dateTo: dateTo
+        });
+       res.render('indext', {educations})
+        
+    }
+
+    
+    catch (e){
+        console.error(e)
+    }
+    
+})
+
+app.get('/educations', async(req, res) => {
+    const educations = await Education.find();
+    console.log('oooooooo', educations)
+    
+    res.render('indext', {educations})
+   
+    
+})
+
+app.get('/edit/education/:id', async (req, res) => {
+    const education = await Education.findById(req.params.id);
+    res.render('editededucation', {education})
+})
+
+app.post('/update/education/:id', async (req, res) => {
+    console.log(req.params.id)
+    Education.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { runValidators: true },
+        (err, doc) => {
+            if (err) {
+                console.log(err);
+                res.redirect('back')
+            }
+            else {
+                console.log(doc)
+                res.redirect('back')
+                res
+            }
+        }
+    )
 })
 
 

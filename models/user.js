@@ -21,11 +21,15 @@ const userSchema = new Schema({
 
 // checking login status
 userSchema.statics.login = async function (email, password) {
-    const user = await this.findOne({ email });
-    if (user) {
-        const auth = await bcrypt.compare(password, user.password)
+    const User = await this.findOne({ email });
+    console.log('userrr',User)
+    if (User) {
+        console.log(password,User.password)
+        const auth = await bcrypt.compare(password, User.password)
+        console.log(auth)
         if (auth) {
-            return user;
+            console.log('uuuuuser', User)
+            return ({User});
         }
        throw Error('Invalid password')
      }
@@ -37,8 +41,10 @@ userSchema.statics.login = async function (email, password) {
 // hashing a password using hook
 userSchema.pre('save', async function (next){
     const salt = await bcrypt.genSalt();
-    this.passwrod = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, salt);
+    console.log('nnnnnn',this.password)
     next();
+
 });
 const user = mongoose.model("user",userSchema);
 module.exports = user;

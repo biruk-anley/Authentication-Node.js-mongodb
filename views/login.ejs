@@ -63,23 +63,23 @@
            
                 // to fetch the submitted data
 
-                const res = await fetch('/login', {
+                const res = await fetch('/login_post', {
+                    
                     body: JSON.stringify({ email, password }),
                     headers: { 'content-type': 'application/json' },
                     method: 'Post'
                 });
 
                 const data = await res.json();
-                console.log('--error--', data);
-                if (data.user) {
+                console.log('--data--', data);
+                if (data.User) {
 
                     location.assign('/register')
                 }
                 else {
 
-                    console.log(data.err)
-                     emailerror.textContent = data.err.email;
-                    passworderror.textContent = data.err.password;
+                     emailerror.textContent = data.err;
+                    
                 }
 
 
